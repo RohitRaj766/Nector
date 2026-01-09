@@ -18,8 +18,35 @@ const gilroyExtraBold = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Nectar - Online Grocery",
-  description: "Get your groceries in as fast as one hour",
+  title: {
+    default: "Nectar | Fresh Groceries Delivered Fast",
+    template: "%s | Nectar Grocery Delivery",
+  },
+  description:
+    "Order fresh groceries, produce, meat, and daily essentials with fast delivery. Track orders, save favorites, and checkout securely on Nectar.",
+  keywords: [
+    "online grocery delivery",
+    "fresh produce",
+    "same-day groceries",
+    "order fruits online",
+    "order vegetables online",
+    "grocery deals",
+    "Nectar app",
+  ],
+  applicationName: "Nectar",
+  authors: [{ name: "Nectar" }],
+  openGraph: {
+    title: "Nectar | Fresh Groceries Delivered Fast",
+    description:
+      "Order fresh groceries, produce, meat, and daily essentials with fast delivery. Track orders, save favorites, and checkout securely on Nectar.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Nectar | Fresh Groceries Delivered Fast",
+    description:
+      "Order fresh groceries, produce, meat, and daily essentials with fast delivery. Track orders, save favorites, and checkout securely on Nectar.",
+  },
 };
 
 export default function RootLayout({

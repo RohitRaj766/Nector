@@ -41,7 +41,7 @@ export const Input: React.FC<InputProps> = ({
           {...props}
         />
         {rightIcon && (
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer">
+          <div className="absolute right-[5%] top-[60%] transform -translate-y-1/2 cursor-pointer">
             {rightIcon}
           </div>
         )}
