@@ -53,9 +53,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white flex justify-center px-6">
-      <div className="max-w-4xl w-full bg-white px-6 py-2 flex justify-center items-center">
+      <div className="max-w-7xl w-full bg-white px-6 py-2 flex justify-center items-center">
         
-        <div className="mt-8 max-w-xl">
+        <div className="mt-8 w-full max-w-xl">
         <Navbar showLogo />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Log In</h1>
           <p className="text-gray-600 text-base mb-8">
