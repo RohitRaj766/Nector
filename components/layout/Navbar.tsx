@@ -49,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {showLogo && (
         <div className="flex items-center gap-2 mx-auto">
           <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-            <span className="text-[#53B175] text-lg">🥕</span>
+            <span className="text-[#53B175] text-3xl">🥕</span>
           </div>
         </div>
       )}

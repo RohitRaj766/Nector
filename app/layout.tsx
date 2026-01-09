@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const gilroyLight = localFont({
+  src: "../public/fonts/Gilroy/Gilroy-Light.otf",
+  variable: "--font-gilroy-light",
+  weight: "300",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const gilroyExtraBold = localFont({
+  src: "../public/fonts/Gilroy/Gilroy-ExtraBold.otf",
+  variable: "--font-gilroy-extrabold",
+  weight: "800",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${gilroyLight.variable} ${gilroyExtraBold.variable} antialiased`}
       >
         {children}
         <Toaster position="bottom-center" />
