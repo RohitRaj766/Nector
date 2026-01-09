@@ -77,7 +77,7 @@ export default function LocationPage() {
                   alt="Location map"
                   width={256}
                   height={256}
-                  className="w-full h-full object-contain"
+                  className="!w-[80%] object-contain"
                   priority
                 />
               </div>
