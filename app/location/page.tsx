@@ -59,11 +59,11 @@ export default function LocationPage() {
         <Navbar showBack title="" />
       </div>
 
-      <div className="relative z-10 px-6 pt-[100px] pb-10 lg:pt-24">
-        <div className="max-w-5xl mx-auto bg-white lg:shadow-sm lg:border border-gray-100 lg:rounded-3xl lg:p-10">
+      <div className="relative z-10 px-6 pb-10 lg:pt-24">
+        <div className="max-w-5xl mx-auto lg:shadow-sm lg:border border-gray-100 lg:rounded-3xl lg:p-10">
           <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-10 lg:items-center">
             {/* Location Image */}
-            <div className="w-full flex justify-center mb-6 lg:mb-0">
+            <div className="w-full flex justify-center mb-6 lg:mb-0 ">
               <div className="w-64 h-64 flex items-center justify-center">
                 <Image
                   src="/assets/location.png"
