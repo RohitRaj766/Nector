@@ -1,10 +1,20 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 
 export default function OrderFailurePage() {
   const router = useRouter();
+  const [loadingButton, setLoadingButton] = useState<'retry' | 'home' | null>(null);
+
+  const goTo = (path: string, key: 'retry' | 'home') => {
+    if (loadingButton) return;
+    setLoadingButton(key);
+    setTimeout(() => {
+      router.push(path);
+    }, 900);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-5">
@@ -21,8 +31,15 @@ export default function OrderFailurePage() {
           <p className="text-sm text-gray-600">Something went terribly wrong.</p>
         </div>
         <div className="space-y-3">
-          <Button onClick={() => router.push('/payment-gateway')}>Please Try Again</Button>
-          <Button variant="secondary" onClick={() => router.push('/home')}>
+          <Button onClick={() => goTo('/payment-gateway', 'retry')} isLoading={loadingButton === 'retry'} disabled={!!loadingButton && loadingButton !== 'retry'}>
+            Please Try Again
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => goTo('/home', 'home')}
+            isLoading={loadingButton === 'home'}
+            disabled={!!loadingButton && loadingButton !== 'home'}
+          >
             Back to home
           </Button>
         </div>

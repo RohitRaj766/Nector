@@ -17,6 +17,7 @@ export default function CartPage() {
   const { isAuthenticated } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -40,8 +41,12 @@ export default function CartPage() {
   const closeCheckout = () => setIsCheckoutOpen(false);
 
   const handlePlaceOrder = () => {
-    setIsCheckoutOpen(false);
-    router.push('/payment-gateway');
+    if (isPlacingOrder) return;
+    setIsPlacingOrder(true);
+    setTimeout(() => {
+      setIsCheckoutOpen(false);
+      router.push('/payment-gateway');
+    }, 900);
   };
 
   const CheckoutSummary = () => (
@@ -106,7 +111,7 @@ export default function CartPage() {
         <span className="text-gray-900 font-semibold">Terms and Conditions</span>
       </p>
 
-      <Button variant="primary" onClick={handlePlaceOrder} disabled={items.length === 0}>
+      <Button variant="primary" onClick={handlePlaceOrder} disabled={items.length === 0} isLoading={isPlacingOrder}>
         Place Order
       </Button>
     </div>

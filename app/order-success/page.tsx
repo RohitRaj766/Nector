@@ -1,10 +1,20 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 
 export default function OrderSuccessPage() {
   const router = useRouter();
+  const [loadingButton, setLoadingButton] = useState<'track' | 'home' | null>(null);
+
+  const goTo = (path: string, key: 'track' | 'home') => {
+    if (loadingButton) return;
+    setLoadingButton(key);
+    setTimeout(() => {
+      router.push(path);
+    }, 900);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-[#eef8f1] to-white flex items-center justify-center px-5">
@@ -21,8 +31,15 @@ export default function OrderSuccessPage() {
           </p>
         </div>
         <div className="space-y-3">
-          <Button onClick={() => router.push('/account')}>Track Order</Button>
-          <Button variant="secondary" onClick={() => router.push('/home')}>
+          <Button onClick={() => goTo('/account', 'track')} isLoading={loadingButton === 'track'} disabled={!!loadingButton && loadingButton !== 'track'}>
+            Track Order
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => goTo('/home', 'home')}
+            isLoading={loadingButton === 'home'}
+            disabled={!!loadingButton && loadingButton !== 'home'}
+          >
             Back to home
           </Button>
         </div>

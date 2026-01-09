@@ -1,11 +1,21 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleGetStarted = () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      router.push('/sign-in');
+    }, 900);
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -46,9 +56,10 @@ export default function OnboardingPage() {
 
           {/* Get Started Button - prominent green button at bottom */}
           <Button
-            onClick={() => router.push('/sign-in')}
+            onClick={handleGetStarted}
             variant="primary"
             className="shadow-xl"
+            isLoading={isLoading}
           >
             Get Started
           </Button>

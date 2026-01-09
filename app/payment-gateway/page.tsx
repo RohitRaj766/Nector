@@ -1,10 +1,26 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 
 export default function PaymentGatewayPage() {
   const router = useRouter();
+  const [isSuccessLoading, setIsSuccessLoading] = useState(false);
+  const [isFailureLoading, setIsFailureLoading] = useState(false);
+
+  const simulate = (type: 'success' | 'failure') => {
+    if (isSuccessLoading || isFailureLoading) return;
+    if (type === 'success') setIsSuccessLoading(true);
+    if (type === 'failure') setIsFailureLoading(true);
+    setTimeout(() => {
+      if (type === 'success') {
+        router.push('/order-success');
+      } else {
+        router.push('/order-failure');
+      }
+    }, 1100);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -35,7 +51,7 @@ export default function PaymentGatewayPage() {
               <p className="text-sm text-gray-600 mt-1">Proceed to the accepted screen shown in the design.</p>
             </div>
           </div>
-          <Button variant="primary" onClick={() => router.push('/order-success')}>
+          <Button variant="primary" onClick={() => simulate('success')} isLoading={isSuccessLoading} disabled={isFailureLoading}>
             Simulate success
           </Button>
         </div>
@@ -50,7 +66,7 @@ export default function PaymentGatewayPage() {
               <p className="text-sm text-gray-600 mt-1">Jump to the error page to mirror a failed transaction.</p>
             </div>
           </div>
-          <Button variant="secondary" onClick={() => router.push('/order-failure')}>
+          <Button variant="secondary" onClick={() => simulate('failure')} isLoading={isFailureLoading} disabled={isSuccessLoading}>
             Simulate failure
           </Button>
         </div>

@@ -18,14 +18,23 @@ export default function SignInPage() {
   }, [isAuthenticated, router]);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isFacebookLoading, setIsFacebookLoading] = useState(false);
+  const [isPhoneLoading, setIsPhoneLoading] = useState(false);
 
-  const handlePhoneNumberClick = () => {
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const handlePhoneNumberClick = async () => {
+    if (isPhoneLoading || isGoogleLoading || isFacebookLoading) return;
+    setIsPhoneLoading(true);
+    await delay(900);
     router.push('/phone-number');
+    setIsPhoneLoading(false);
   };
 
   const handleGoogleLogin = async () => {
+    if (isGoogleLoading || isFacebookLoading || isPhoneLoading) return;
     setIsGoogleLoading(true);
     try {
+      await delay(900);
       const success = await socialLogin('google');
       if (success) {
         router.push('/location');
@@ -36,8 +45,10 @@ export default function SignInPage() {
   };
 
   const handleFacebookLogin = async () => {
+    if (isFacebookLoading || isGoogleLoading || isPhoneLoading) return;
     setIsFacebookLoading(true);
     try {
+      await delay(900);
       const success = await socialLogin('facebook');
       if (success) {
         router.push('/location');
@@ -84,14 +95,42 @@ export default function SignInPage() {
                 <button
                   type="button"
                   onClick={handlePhoneNumberClick}
-                  className="
+                  disabled={isPhoneLoading || isGoogleLoading || isFacebookLoading}
+                  className={`
                     w-full py-4 pl-12 pr-4 rounded-2xl border-2 border-gray-200 
                     focus:border-[#53B175] focus:outline-none
                     text-base text-left bg-white cursor-pointer
                     hover:border-[#53B175] transition-colors
-                  "
+                    disabled:opacity-60 disabled:cursor-not-allowed relative
+                  `}
                 >
-                  <span className="text-gray-400">+880</span>
+                  <span className="text-gray-400">
+                    {isPhoneLoading ? 'Loading...' : '+880'}
+                  </span>
+                  {isPhoneLoading && (
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <svg
+                        className="animate-spin h-5 w-5 text-[#53B175]"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    </span>
+                  )}
                 </button>
                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                   <svg

@@ -14,6 +14,8 @@ import { useAuthStore } from '@/store/authStore';
 export default function SignUpPage() {
   const router = useRouter();
   const { signUp, isLoading, isAuthenticated } = useAuthStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -47,9 +49,16 @@ export default function SignUpPage() {
   }, [emailValue]);
 
   const onSubmit = async (data: SignUpFormData) => {
-    const success = await signUp(data.username, data.email, data.password);
-    if (success) {
-      router.push('/home');
+    if (isSubmitting || isLoading) return;
+    setIsSubmitting(true);
+    try {
+      await delay(900);
+      const success = await signUp(data.username, data.email, data.password);
+      if (success) {
+        router.push('/home');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -168,7 +177,7 @@ export default function SignUpPage() {
               .
             </div>
 
-            <Button type="submit" variant="primary" isLoading={isLoading}>
+            <Button type="submit" variant="primary" isLoading={isLoading || isSubmitting}>
               Sign Up
             </Button>
 

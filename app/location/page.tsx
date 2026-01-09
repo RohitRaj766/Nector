@@ -1,5 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { locationSchema, type LocationFormData } from '@/lib/zod-schemas';
@@ -11,6 +12,8 @@ import Image from 'next/image';
 export default function LocationPage() {
   const router = useRouter();
   const { zones, areas, selectedZone, setZone, setArea } = useLocationStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const {
     register,
@@ -42,10 +45,14 @@ export default function LocationPage() {
     setValue('area', area);
   };
 
-  const onSubmit = (data: LocationFormData) => {
+  const onSubmit = async (data: LocationFormData) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    await delay(900);
     setZone(data.zone);
     setArea(data.area);
     router.push('/home');
+    setIsSubmitting(false);
   };
 
   return (
@@ -168,7 +175,7 @@ export default function LocationPage() {
                   )}
                 </div>
 
-                <Button type="submit" variant="primary" className="mt-8 w-full">
+                <Button type="submit" variant="primary" className="mt-8 w-full" isLoading={isSubmitting}>
                   Submit
                 </Button>
               </form>
