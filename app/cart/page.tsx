@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { DesktopNav } from '@/components/layout/DesktopNav';
 import { CartItemSkeleton, Skeleton } from '@/components/ui/Skeleton';
+import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 
@@ -15,6 +16,7 @@ export default function CartPage() {
   const { items, increment, decrement, removeItem, totalPrice } = useCartStore();
   const { isAuthenticated } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -29,6 +31,86 @@ export default function CartPage() {
     return undefined;
   }, [isAuthenticated, router]);
   const total = useMemo(() => totalPrice().toFixed(2), [items, totalPrice]);
+
+  const openCheckout = () => {
+    if (items.length === 0) return;
+    setIsCheckoutOpen(true);
+  };
+
+  const closeCheckout = () => setIsCheckoutOpen(false);
+
+  const handlePlaceOrder = () => {
+    setIsCheckoutOpen(false);
+    router.push('/payment-gateway');
+  };
+
+  const CheckoutSummary = () => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+        <div>
+          <p className="text-sm font-semibold text-gray-900">Delivery</p>
+          <p className="text-xs text-gray-500 mt-0.5">Select Method</p>
+        </div>
+        <button
+          type="button"
+          className="text-sm font-semibold text-gray-700 flex items-center gap-1"
+          aria-label="Choose delivery method"
+        >
+          Select
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+        <div>
+          <p className="text-sm font-semibold text-gray-900">Payment</p>
+          <p className="text-xs text-gray-500 mt-0.5">Select Method</p>
+        </div>
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <span className="inline-block w-5 h-3 rounded-sm bg-gradient-to-r from-blue-600 to-red-500" />
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+        <div>
+          <p className="text-sm font-semibold text-gray-900">Promo Code</p>
+          <p className="text-xs text-gray-500 mt-0.5">Pick discount</p>
+        </div>
+        <button
+          type="button"
+          className="text-sm font-semibold text-gray-700 flex items-center gap-1"
+          aria-label="Apply promo code"
+        >
+          Add
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="flex items-center justify-between py-3">
+        <div>
+          <p className="text-sm font-semibold text-gray-900">Total Cost</p>
+          <p className="text-xs text-gray-500 mt-0.5">Including VAT</p>
+        </div>
+        <p className="text-lg font-bold text-gray-900">${total}</p>
+      </div>
+
+      <p className="text-xs text-gray-500">
+        By placing an order you agree to our{' '}
+        <span className="text-gray-900 font-semibold">Terms and Conditions</span>
+      </p>
+
+      <Button variant="primary" onClick={handlePlaceOrder} disabled={items.length === 0}>
+        Place Order
+      </Button>
+    </div>
+  );
 
   if (isLoading || !isAuthenticated) {
     return (
@@ -169,7 +251,7 @@ export default function CartPage() {
           </main>
 
           {/* Desktop summary */}
-          <aside className="hidden lg:block bg-white rounded-3xl shadow-sm border border-gray-100 p-6 space-y-4">
+          <aside className="hidden lg:block bg-white rounded-3xl shadow-sm border border-gray-100 p-6 space-y-5">
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-600">Subtotal</p>
               <p className="text-lg font-semibold text-gray-900">${total}</p>
@@ -182,15 +264,19 @@ export default function CartPage() {
               <p className="text-base font-semibold text-gray-900">Total</p>
               <p className="text-xl font-bold text-gray-900">${total}</p>
             </div>
-            <button className="w-full bg-[#53B175] text-white rounded-2xl py-4 px-4 font-semibold hover:bg-[#45a065] transition-colors disabled:opacity-60 disabled:cursor-not-allowed" disabled={items.length === 0}>
-              Go to Checkout
-            </button>
+            <div className="border-t border-gray-100 pt-4">
+              <CheckoutSummary />
+            </div>
           </aside>
         </div>
 
         {items.length > 0 && (
           <div className="fixed bottom-20 left-0 right-0 px-5 z-10 lg:hidden">
-            <button className="w-full bg-[#53B175] text-white rounded-2xl py-4 px-4 flex items-center justify-between font-semibold hover:bg-[#45a065] transition-colors">
+            <button
+              type="button"
+              onClick={openCheckout}
+              className="w-full bg-[#53B175] text-white rounded-2xl py-4 px-4 flex items-center justify-between font-semibold hover:bg-[#45a065] transition-colors"
+            >
               <span>Go to Checkout</span>
               <span className="bg-[#45a065] rounded-xl px-4 py-2 font-semibold">
                 ${total}
@@ -199,6 +285,33 @@ export default function CartPage() {
           </div>
         )}
       </div>
+
+      {isCheckoutOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex items-end lg:hidden"
+          onClick={closeCheckout}
+        >
+          <div
+            className="bg-white w-full rounded-t-3xl shadow-2xl max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-900">Checkout</h2>
+              <button
+                type="button"
+                onClick={closeCheckout}
+                aria-label="Close checkout"
+                className="text-gray-500 hover:text-gray-800 text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <div className="px-5 pb-6 pt-4">
+              <CheckoutSummary />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="lg:hidden">
         <BottomNav />
