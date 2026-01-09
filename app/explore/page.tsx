@@ -66,6 +66,7 @@ function ExploreContent() {
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const isClearingRef = useRef(false);
+  const processedCategoryRef = useRef<string | null>(null);
 
   const products = filteredProducts();
   const brandOptions = Object.values(Brand);
@@ -93,6 +94,7 @@ function ExploreContent() {
   const clearFilters = () => {
     // Set flag to prevent useEffect from re-adding categories
     isClearingRef.current = true;
+    processedCategoryRef.current = null;
     
     // Clear all selected categories and brands first
     Array.from(selectedCategories).forEach((cat) => toggleCategory(cat));
@@ -128,16 +130,23 @@ function ExploreContent() {
     // Don't sync if we're in the process of clearing filters
     if (isClearingRef.current) return;
     
-    if (!categoryParam) return;
+    if (!categoryParam) {
+      processedCategoryRef.current = null;
+      return;
+    }
+    
     const cat = categoryParam as ProductCategory;
-    if (!selectedCategories.has(cat)) {
+    
+    // Only process if this is a new category param (not already processed)
+    if (processedCategoryRef.current !== categoryParam && !selectedCategories.has(cat)) {
       toggleCategory(cat);
       const category = categories.find((c) => c.id === cat);
       if (category) {
         toast.success(`${category.name} selected`);
+        processedCategoryRef.current = categoryParam;
       }
     }
-  }, [categoryParam, selectedCategories, toggleCategory, categories]);
+  }, [categoryParam, toggleCategory, categories]);
 
   if (isLoading || !isAuthenticated) {
     return (
